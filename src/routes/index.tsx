@@ -1,24 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Activity, BrainCircuit, Droplets, Gauge, Waves } from "lucide-react";
+import { OperationalMap } from "@/components/aquagraph/OperationalMap";
+import { ActionList, EventList } from "@/components/aquagraph/lists";
+import { KpiCard, PageTitle, Panel, SectionHeader } from "@/components/aquagraph/primitives";
+import { leakEvents } from "@/data/leaks";
+import { Button } from "@/components/ui/button";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
+export const Route = createFileRoute("/")({ head:()=>({meta:[{title:"Centro Operacional — AquaGraph"},{name:"description",content:"Visão integrada da situação hídrica de Ribeirão das Águas."},{property:"og:title",content:"Centro Operacional — AquaGraph"},{property:"og:description",content:"Visão integrada da situação hídrica de Ribeirão das Águas."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}]}), component: Overview });
+function Overview(){return <div className="page"><PageTitle title="Centro Operacional" subtitle="Visão integrada da situação hídrica da cidade"/><div className="kpi-grid"><KpiCard label="Perda estimada" value="12,4%" delta="↓ 2,1 p.p." icon={Droplets}/><KpiCard label="Reservatórios" value="42%" delta="↓ 8 p.p." icon={Gauge} tone="amber"/><KpiCard label="Áreas críticas" value="8" delta="↑ 2" icon={Waves} tone="red"/><KpiCard label="Confiança do modelo" value="92%" delta="Alta confiabilidade" icon={BrainCircuit} tone="green"/></div><div className="operations-grid"><Panel><SectionHeader title="MAPA OPERACIONAL — SITUAÇÃO EM TEMPO QUASE REAL" action={<span className="live-label"><i/>Dados atualizados há 2 min</span>}/><OperationalMap mode="overview" selectedSector="14-B"/></Panel><aside className="side-stack"><Panel><SectionHeader title="EVENTOS PRIORITÁRIOS" action={<Activity/>}/><EventList items={[leakEvents[0],{place:"Reservatório Norte",issue:"Tendência de escassez",metric:"53 dias",level:"attention"},{place:"Avenida B",issue:"Risco hidrológico",metric:"1h20",level:"high"}]}/></Panel><Panel><SectionHeader title="AÇÕES RECOMENDADAS"/><ActionList items={[{action:"Inspecionar setor 14-B"},{action:"Avaliar redução de pressão noturna"},{action:"Verificar galeria 231"}]}/><div className="panel-footer"><Button asChild className="w-full" variant="operational"><Link to="/decisoes">Ver centro de decisões</Link></Button></div></Panel></aside></div></div>}
